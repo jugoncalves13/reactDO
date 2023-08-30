@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 function App() {
   
 const [ listaTarefas, setListaTarefas ]= useState( [] );
-const [ tarefa, setTarefa ] = useState( { id:'', texto: ""} );
+const [ tarefa, setTarefa ] = useState( { id:'', texto: "", status: ""} );
 
 function addTarefa()
 {
@@ -18,8 +18,16 @@ function excluirTarefa( id )
   setListaTarefas( novalista );
 }
 
+function statusTarefa( id , status)
+{
+   const index = listaTarefas.findIndex( (tarefa) => tarefa.id === id );
+   const novoStatus = status;
+   listaTarefas[index].status = !status;
+   setListaTarefas( [...listaTarefas] );
+}
+
 useEffect( () => {
-  setTarefa( { id: "" , texto: "" } );
+  setTarefa( { id: "" , texto: "" , status: "" } );
 }, [ listaTarefas ] )
   return (
     <>
@@ -27,13 +35,13 @@ useEffect( () => {
       <h1>Lista-Tarefas</h1>
     </header>
     <div>
-      <input type="text" name="tarefa" placeholder="Digite sua Tarefa"  value={tarefa.texto} onChange={ (e) => setTarefa( { id: Math.random(), texto: e.target.value} ) }/>
+      <input type="text" name="tarefa" placeholder="Digite sua Tarefa"  value={tarefa.texto} onChange={ (e) => setTarefa( { id: Math.random(), texto: e.target.value, status: false} ) }/>
       <button onClick={addTarefa}>Adicionar</button>
     </div>
     <div>
       <ul>
       {listaTarefas.map( (item, index ) =>( 
-        <li key={index}>{item.texto} <button onClick={ () => excluirTarefa(item.id) }>X</button></li>
+        <li key={index}>{item.texto} <button onClick={ () => statusTarefa(item.id, item.status) }>{item.status ? 'Concluida' : 'Não concluida' }</button><button onClick={ () => excluirTarefa(item.id) }>X</button></li>
       ))}
       </ul>
     </div>
